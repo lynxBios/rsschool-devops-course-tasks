@@ -6,5 +6,17 @@ provider "aws" {
 
 resource "aws_s3_bucket" "rs-school-bucket-1" {
   bucket = "rs-school-bucket-1"
+}
+
+resource "aws_s3_bucket_ownership_controls" "ownership_controls" {
+  bucket = aws_s3_bucket.rs-school-bucket-1.id
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+resource "aws_s3_bucket_acl" "private_acl" {
+  bucket = aws_s3_bucket.rs-school-bucket-1.id
   acl    = "private"
+  depends_on = [aws_s3_bucket_ownership_controls.ownership_controls]
 }
