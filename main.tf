@@ -1,14 +1,14 @@
-variable "aws_access_key" {
-  type = string
+terraform {
+  required_version = ">= 1.0.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.0.0"
+    }
+  }
 }
 
-variable "aws_secret_key" {
-  type = string
-}
-
-variable "aws_region" {
-  type = string
-}
 
 provider "aws" {
   access_key = var.aws_access_key
