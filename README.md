@@ -30,11 +30,6 @@ Create Identity Provider
 В поле "Тип идентификатора" (Identity type) выберите "OpenID Connect" (OpenID Connect).
 Введите URL-адрес провайдера в поле "URL-адрес провайдера OpenID Connect" (OpenID Connect provider URL). В данном случае URL-адрес провайдера - https://token.actions.githubusercontent.com.
 Нажмите на "Создать идентификатор" (Create identity).
-В поле "Audience" (также известном как "Client ID") необходимо указать клиентский идентификатор, выданный провайдером удостоверений (в данном случае GitHub Actions) для вашего приложения.
+В поле "Audience" необходимо указать значение ```sts.amazonaws.com```.
 
-Чтобы найти клиентский идентификатор, выполните следующие шаги:   
-Создайте роль IAM: 
-В консоли AWS создайте роль IAM и настройте доверительные отношения, чтобы разрешить GitHub Actions принимать эту роль.
-Найдите ```ARN``` роли: 
-Это будет ваш ```client_id``` в контексте GitHub Actions и AWS.
 После выполнения этих шагов, Terraform должен успешно настроить доступ к вашему аккаунту AWS с помощью GitHub Actions.
