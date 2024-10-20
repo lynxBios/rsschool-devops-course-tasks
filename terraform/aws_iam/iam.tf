@@ -7,7 +7,7 @@ resource "aws_iam_role" "GithubActionsRole" {
       {
         Effect = "Allow",
         Principal = {
-          Federated = "arn:aws:iam::${var.AWS_ARN}:oidc-provider/token.actions.githubusercontent.com"
+          Federated = "arn:aws:iam::${variables.githubActions_role_arn}:oidc-provider/token.actions.githubusercontent.com"
         },
         Action = "sts:AssumeRoleWithWebIdentity",
         Condition = {
@@ -15,7 +15,7 @@ resource "aws_iam_role" "GithubActionsRole" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           },
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:${var.REPO}/rsschool-devops-course-tasks:*"
+            "token.actions.githubusercontent.com:sub" = "repo:${variables.repository}/rsschool-devops-course-tasks:*"
           }
         }
       }
