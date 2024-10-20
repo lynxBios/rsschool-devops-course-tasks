@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket  = "rs-school-bucket-1 "
+    bucket  = "lynxr-terraform-state"
     key     = "terraform.tfstate"
     region  = "us-west-2"
     encrypt = true

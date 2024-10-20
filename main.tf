@@ -14,9 +14,3 @@ resource "aws_s3_bucket_ownership_controls" "ownership_controls" {
     object_ownership = "BucketOwnerEnforced"
   }
 }
-
-resource "aws_s3_bucket_acl" "private_acl" {
-  bucket     = aws_s3_bucket.rs-school-bucket-1.id
-  acl        = "private"
-  depends_on = [aws_s3_bucket_ownership_controls.ownership_controls]
-}
