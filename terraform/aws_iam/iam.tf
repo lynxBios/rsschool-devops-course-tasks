@@ -1,26 +1,35 @@
 resource "aws_iam_role" "GithubActionsRole" {
   name = "GithubActionsRole"
+  assume_role_policy = data.aws_iam_policy_document.GithubActionsRole.json
+}
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Federated = "arn:aws:iam::${var.AWS_ARN}:oidc-provider/token.actions.githubusercontent.com"
-        },
-        Action = "sts:AssumeRoleWithWebIdentity",
-        Condition = {
-          StringEquals = {
-            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          },
-          StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:${var.REPO}/rsschool-devops-course-tasks:*"
-          }
-        }
-      }
+data "aws_iam_policy_document" "GithubActionsRole" {
+  statement {
+    actions = [
+      "sts:AssumeRoleWithWebIdentity"
     ]
-  })
+    condition {
+      test     = "ForAllValues:StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+    condition {
+      test     = "ForAllValues:StringEquals"
+      variable = "token.actions.githubusercontent.com:iss"
+      values   = ["https://token.actions.githubusercontent.com"]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values = ["repo:lynxBios/rsschool-devops-course-tasks:*"]
+    }
+
+    principals {
+      type        = "Federated"
+      identifiers = ["arn:aws:iam::${variables.account_id}:oidc-provider/token.actions.githubusercontent.com"]
+    }
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "GithubActionsRole_ec2" {

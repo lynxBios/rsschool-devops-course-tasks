@@ -1,3 +1,15 @@
+terraform {
+  required_version = ">= 1.0.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.0.0"
+    }
+  }
+}
+
+
 provider "aws" {
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
@@ -13,10 +25,4 @@ resource "aws_s3_bucket_ownership_controls" "ownership_controls" {
   rule {
     object_ownership = "BucketOwnerEnforced"
   }
-}
-
-resource "aws_s3_bucket_acl" "private_acl" {
-  bucket = aws_s3_bucket.rs-school-bucket-1.id
-  acl    = "private"
-  depends_on = [aws_s3_bucket_ownership_controls.ownership_controls]
 }
