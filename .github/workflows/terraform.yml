@@ -12,10 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
-
       - name: Format Code
         run: terraform fmt -check
 
@@ -28,22 +26,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::637423606154:role/GithubActionsRole
-          aws-region: us-west-2
+          role-to-assume: ${{ secrets.GITHUBACTIONS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
           audience: sts.amazonaws.com
-
       - name: Initialize Terraform
         run: terraform init
-
       - name: Create deployment plan
-        run: terraform plan
+        run: terraform plan -var 'account_id=${{ secrets.ACCOUNT_ID }}' -var 'aws_access_key=${{ secrets.AWS_ACCESS_KEY }}' -var 'aws_secret_key=${{ secrets.AWS_SECRET_KEY }}' -var 'aws_region=${{ secrets.AWS_REGION }}'
 
   terraform-apply:
     runs-on: ubuntu-latest
@@ -54,19 +48,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::637423606154:role/GithubActionsRole
-          aws-region: us-west-2
+          role-to-assume: ${{ secrets.GITHUBACTIONS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
           audience: sts.amazonaws.com
-
       - name: Initialize Terraform
         run: terraform init
-
       - name: Deploy infrastructure
-        run: terraform apply
+        run: terraform apply -var 'account_id=${{ secrets.ACCOUNT_ID }}' -var 'aws_access_key=${{ secrets.AWS_ACCESS_KEY }}' -var 'aws_secret_key=${{ secrets.AWS_SECRET_KEY }}' -var 'aws_region=${{ secrets.AWS_REGION }}'
