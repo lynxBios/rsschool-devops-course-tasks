@@ -12,7 +12,7 @@ variable "aws_region" {
   type = string
 }
 
-variable "githubActions_role_arn" {
+variable "GithubActionsRole" {
   type = string
 }
 
