@@ -44,8 +44,14 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Create deployment plan
-        run: terraform plan -var 'account_id=${{ secrets.ACCOUNT_ID }}' -var 'aws_access_key=${{ secrets.AWS_ACCESS_KEY }}' -var 'aws_secret_key=${{ secrets.AWS_SECRET_KEY }}' -var 'aws_region=${{ secrets.AWS_REGION }}'
+      - name: Deployment Plan For Tfstate Bucket
+        run: terraform plan -target=aws_s3_bucket.lynxr-terraform-state
+
+      - name: Terraform Plan For GithubActionsRole
+        run: terraform plan -target=aws_iam_role.GithubActionsRole
+
+      - name: Create deployment plan for all resources
+        run: terraform plan
 
   terraform-apply:
     runs-on: ubuntu-latest
@@ -65,7 +71,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::637423606154:role/GithubActionsRole
-          aws-region: us-west-2
+          aws-region: ${{ secrets.AWS_REGION }}
           audience: sts.amazonaws.com
 
       - name: Initialize Terraform
