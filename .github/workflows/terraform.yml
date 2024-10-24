@@ -48,7 +48,7 @@ jobs:
         run: terraform plan -target=aws_s3_bucket.lynxr-terraform-state
 
       - name: Terraform Plan For GithubActionsRole
-        run: terraform plan -target=aws_iam_role.GithubActionsRole -var 'githubActions_role_arn=${{ secrets.GITHUBACTIONSROLE }}'
+        run: terraform plan -target=aws_iam_role.GithubActionsRole -var 'GithubActionsRole=${{ secrets.GITHUBACTIONSROLE }}'
 
       - name: Create deployment plan for all resources
         run: terraform plan
