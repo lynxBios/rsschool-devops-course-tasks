@@ -24,4 +24,7 @@ override.tf.json
 terraform.rc
 
 # Ignore lock files
-.terraform.lock.hcl 
+.terraform.lock.hcl
+
+# Ignore trust policy file
+trust-policy.json 
