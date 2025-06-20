@@ -1,3 +1,4 @@
+// variables.tf: все переменные для инфраструктуры
 variable "aws_region" {
   description = "AWS region"
   type        = string
