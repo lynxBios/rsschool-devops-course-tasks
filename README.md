@@ -1,72 +1,147 @@
-# RSSchool DevOps Course Tasks
+# AWS Kubernetes Networking Infrastructure (Terraform)
 
-## AWS DevOps 2025Q2
+This project provides a production-ready, cost-effective AWS networking infrastructure for a Kubernetes cluster using Terraform. It implements a VPC with public and private subnets, a NAT instance (instead of a NAT Gateway), a bastion host for secure access, and robust security controls (Security Groups and Network ACLs).
 
-### Project Description
-This repository contains infrastructure as code (IaC) for AWS resources using Terraform. The infrastructure includes:
-- S3 bucket for Terraform state storage
-- IAM roles and policies for GitHub Actions
-- Other AWS resources as needed
+---
 
-### Prerequisites
-- AWS CLI 2.x
-- Terraform 1.6+
-- AWS Account with appropriate permissions
-- GitHub Account
+## 🚀 Features
+- **VPC** with public and private subnets across multiple Availability Zones
+- **NAT Instance** for internet access from private subnets ("cheaper way")
+- **Bastion Host** for secure SSH access
+- **Internet Gateway** for public subnet access
+- **Custom Security Groups** for web, database, and Kubernetes nodes
+- **Network ACLs** for additional subnet-level security
+- **Tested connectivity** and security between all components
 
-### Infrastructure Setup
-1. Configure AWS CLI with your credentials
-2. Initialize Terraform:
-   ```bash
+---
+
+## 🗺️ Architecture Diagram
+
+```mermaid
+graph TD
+  Internet["Internet"]
+  IGW["Internet Gateway"]
+  VPC["VPC"]
+  PublicSubnet1["Public Subnet 1"]
+  PublicSubnet2["Public Subnet 2"]
+  PrivateSubnet1["Private Subnet 1"]
+  PrivateSubnet2["Private Subnet 2"]
+  Bastion["Bastion Host"]
+  NAT["NAT Instance"]
+  K8sNodes["Kubernetes Nodes"]
+  DB["Database Servers"]
+  Web["Web Servers"]
+
+  Internet --> IGW
+  IGW --> PublicSubnet1
+  IGW --> PublicSubnet2
+  PublicSubnet1 --> Bastion
+  PublicSubnet1 --> NAT
+  PublicSubnet1 --> Web
+  PublicSubnet2 --> Web
+  NAT --> PrivateSubnet1
+  NAT --> PrivateSubnet2
+  PrivateSubnet1 --> K8sNodes
+  PrivateSubnet2 --> DB
+  Bastion -.-> NAT
+  Bastion -.-> K8sNodes
+  Bastion -.-> DB
+```
+
+---
+
+## 📦 Project Structure
+
+- `main.tf` — entry point, includes all modules/resources
+- `vpc.tf` — VPC resource
+- `subnets.tf` — public/private subnets
+- `igw.tf` — Internet Gateway
+- `route_tables.tf` — public/private route tables and associations
+- `nat_instance.tf` — NAT instance and its network interface
+- `bastion.tf` — Bastion host EC2 instance
+- `security.tf` — Security Groups and Network ACLs
+- `variables.tf` — all input variables
+- `outputs.tf` — useful outputs (IPs, connection instructions)
+
+---
+
+## ⚙️ Requirements
+- [Terraform](https://www.terraform.io/) >= 1.3
+- AWS account with sufficient IAM permissions
+- Existing EC2 key pair (see `key_pair_name` variable)
+
+---
+
+## 🚦 Quick Start
+
+1. **Clone the repository:**
+   ```sh
+   git clone <your-repo-url>
+   cd rsschool-devops-course-tasks
+   ```
+2. **Configure AWS credentials:**
+   ```sh
+   export AWS_ACCESS_KEY_ID=...
+   export AWS_SECRET_ACCESS_KEY=...
+   export AWS_DEFAULT_REGION=eu-central-1
+   ```
+3. **(Optional) Set variables:**
+   - By default, AMI and key pair are set for Amazon Linux 2023 in `eu-central-1`.
+   - To override, create `terraform.tfvars`:
+     ```hcl
+     ami_id      = "ami-xxxxxxxxxxxxxxxxx"
+     key_pair_name = "your-key-pair"
+     ```
+4. **Initialize and apply:**
+   ```sh
    terraform init
-   ```
-3. Plan the infrastructure:
-   ```bash
    terraform plan
-   ```
-4. Apply the infrastructure:
-   ```bash
    terraform apply
    ```
+5. **Get connection info:**
+   ```sh
+   terraform output connection_instructions
+   ```
 
-### Project Structure
-- `main.tf` - Main Terraform configuration
-- `variables.tf` - Variable definitions
-- `providers.tf` - Provider configurations
-- `backend.tf` - Backend configuration for state storage
-- `.github/workflows/` - GitHub Actions workflows
+---
 
-### Security
-- S3 bucket for Terraform state is encrypted
-- Public access is blocked
-- Versioning is enabled
-- IAM roles follow least privilege principle
+## 🔒 Security & Best Practices
+- **SSH access** to servers is only allowed via the bastion host (except for web servers' HTTP/HTTPS)
+- **Security Groups** restrict traffic by role (web, db, k8s)
+- **Network ACLs** provide subnet-level filtering
+- **Private keys** (`*.pem`) are ignored by git (`.gitignore`)
+- **After testing,** remove any wide-open SSH rules (0.0.0.0/0)
 
-### Contributing
-1. Create a new branch
-2. Make your changes
-3. Create a pull request
-4. Ensure all checks pass
+---
 
-## New Terraform File Structure (Cheaper way: NAT Instance)
+## 🧪 Testing Connectivity
+- SSH to bastion host using the output public IP
+- From bastion, SSH to NAT instance or any private instance
+- Private instances can access the internet via NAT instance
+- Public instances are accessible only on allowed ports
 
-- `vpc.tf` — VPC and basic resources
-- `subnets.tf` — public and private subnets in two AZs
-- `igw.tf` — Internet Gateway
-- `route_tables.tf` — route tables and associations
-- `nat_instance.tf` — NAT Instance (EC2 + user-data for NAT)
-- `bastion.tf` — Bastion Host (EC2 for SSH access)
-- `security.tf` — Security Groups and (optionally) Network ACLs
-- `variables.tf` — all infrastructure variables
-- `outputs.tf` — outputs (e.g., IP addresses, resource IDs)
+---
 
-### Architecture
-- VPC: 172.31.0.0/16, region eu-central-1
-- 2 public subnets (172.31.1.0/24, 172.31.2.0/24) in different AZs (eu-central-1a, eu-central-1b)
-- 2 private subnets (172.31.101.0/24, 172.31.102.0/24) in different AZs
-- Internet Gateway for public subnets to access the internet
-- NAT Instance (EC2) in one of the public subnets to provide internet access for private subnets (Cheaper way)
-- Bastion Host (EC2) for SSH access to private subnets
-- Security Groups: SSH access allowed only from IP 37.214.3.227, all other rules follow the principle of least privilege
+## 🗂️ File Descriptions
+- **main.tf** — Terraform root module
+- **vpc.tf** — VPC definition
+- **subnets.tf** — Subnet resources
+- **igw.tf** — Internet Gateway
+- **route_tables.tf** — Route tables and associations
+- **nat_instance.tf** — NAT instance, network interface, user-data
+- **bastion.tf** — Bastion host EC2 instance
+- **security.tf** — Security Groups and Network ACLs
+- **variables.tf** — All input variables
+- **outputs.tf** — Outputs for connection and resource IDs
 
-Each file will be filled with the corresponding Terraform code in the following steps. After each step, a separate commit will be made.
+---
+
+## 📝 Notes
+- This project is designed for educational and demo purposes, but follows best practices for real-world use.
+- For production, restrict SSH access to trusted IPs only and monitor NAT instance health.
+- For cost optimization, use NAT instance only for small/medium workloads.
+
+---
+
+## 📧 Questions?
+Open an issue or contact the maintainer.
