@@ -47,3 +47,27 @@ variable "terraform_state_bucket" {
   type        = string
   default     = "tf-state-devops-2025q2"
 }
+
+variable "key_pair_name" {
+  description = "Name of the EC2 key pair for SSH access"
+  type        = string
+  default     = "ec2-key-pair"
+}
+
+variable "ssh_access_ip" {
+  description = "IP address allowed for SSH access to bastion and NAT instance"
+  type        = string
+  default     = "37.214.3.227/32"
+}
+
+variable "nat_instance_type" {
+  description = "EC2 instance type for NAT instance"
+  type        = string
+  default     = "t3.nano"
+}
+
+variable "bastion_instance_type" {
+  description = "EC2 instance type for bastion host"
+  type        = string
+  default     = "t3.micro"
+}

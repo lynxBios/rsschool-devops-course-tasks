@@ -1,0 +1,1 @@
+// bastion.tf: Bastion Host (EC2 для SSH-доступа) 
