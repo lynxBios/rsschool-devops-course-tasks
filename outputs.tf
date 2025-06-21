@@ -61,4 +61,6 @@ output "connection_instructions" {
 
 ===========================================
 EOT
-} 
+}
+
+// Remove test instances outputs - they are no longer needed 
