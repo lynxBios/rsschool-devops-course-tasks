@@ -76,10 +76,5 @@ variable "bastion_instance_type" {
 variable "ami_id" {
   description = "AMI ID for EC2 instances"
   type        = string
-}
-
-// SSH key pair name for EC2 instances
-variable "key_name" {
-  description = "SSH key pair name for EC2 instances"
-  type        = string
+  default     = "ami-0669b163befffbdfc" // Amazon Linux 2023 in eu-central-1
 }
