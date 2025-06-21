@@ -71,3 +71,15 @@ variable "bastion_instance_type" {
   type        = string
   default     = "t3.micro"
 }
+
+// AMI ID for EC2 instances
+variable "ami_id" {
+  description = "AMI ID for EC2 instances"
+  type        = string
+}
+
+// SSH key pair name for EC2 instances
+variable "key_name" {
+  description = "SSH key pair name for EC2 instances"
+  type        = string
+}
