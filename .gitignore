@@ -27,4 +27,15 @@ terraform.rc
 .terraform.lock.hcl
 
 # Ignore trust policy file
-trust-policy.json 
+trust-policy.json
+
+# Private keys
+*.pem
+*.key
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db 
