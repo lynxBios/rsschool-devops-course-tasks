@@ -1,4 +1,4 @@
-// outputs.tf: outputs (например, IP адреса, ID ресурсов) 
+// outputs.tf: outputs (e.g., IP addresses, resource IDs) 
 
 output "vpc_id" {
   description = "The ID of the VPC"
@@ -63,4 +63,12 @@ output "connection_instructions" {
 EOT
 }
 
-// Remove test instances outputs - they are no longer needed 
+output "k3s_master_private_ip" {
+  description = "Private IP of k3s master node"
+  value       = aws_instance.k3s_master.private_ip
+}
+
+output "k3s_agent_private_ip" {
+  description = "Private IP of k3s agent node"
+  value       = aws_instance.k3s_agent.private_ip
+}
