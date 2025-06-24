@@ -79,7 +79,7 @@ EOF
 
 // NAT instance
 resource "aws_instance" "nat" {
-  ami           = "ami-0669b163befffbdfc" // Amazon Linux 2023 in eu-central-1
+  ami           = var.ami_id
   instance_type = var.nat_instance_type
   key_name      = var.key_pair_name
 
