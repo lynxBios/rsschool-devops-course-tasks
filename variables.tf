@@ -63,18 +63,18 @@ variable "ssh_access_ip" {
 variable "nat_instance_type" {
   description = "EC2 instance type for NAT instance"
   type        = string
-  default     = "t3.nano"
+  default     = "t4g.nano"
 }
 
 variable "bastion_instance_type" {
   description = "EC2 instance type for bastion host"
   type        = string
-  default     = "t3.micro"
+  default     = "t4g.nano"
 }
 
 // AMI ID for EC2 instances
 variable "ami_id" {
-  description = "AMI ID for EC2 instances"
+  description = "The AMI ID to use for EC2 instances"
   type        = string
-  default     = "ami-0669b163befffbdfc" // Amazon Linux 2023 in eu-central-1
+  default     = "ami-010c7f98e3f059828"
 }
