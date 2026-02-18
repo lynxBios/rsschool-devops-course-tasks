@@ -140,8 +140,3 @@ graph TD
 - This project is designed for educational and demo purposes, but follows best practices for real-world use.
 - For production, restrict SSH access to trusted IPs only and monitor NAT instance health.
 - For cost optimization, use NAT instance only for small/medium workloads.
-
----
-
-## 📧 Questions?
-Open an issue or contact the maintainer.
