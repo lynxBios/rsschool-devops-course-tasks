@@ -31,7 +31,7 @@ resource "aws_security_group" "bastion" {
 
 // Bastion host instance
 resource "aws_instance" "bastion" {
-  ami           = "ami-0669b163befffbdfc" // Amazon Linux 2023
+  ami           = var.ami_id
   instance_type = var.bastion_instance_type
   key_name      = var.key_pair_name
   subnet_id     = aws_subnet.public[0].id
